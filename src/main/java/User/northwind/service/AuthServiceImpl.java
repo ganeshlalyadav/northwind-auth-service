@@ -1,5 +1,6 @@
 package User.northwind.service;
 
+import User.northwind.dao.JWTAuthResponse;
 import User.northwind.dao.LoginDto;
 import User.northwind.repo.UsersRepo;
 import User.northwind.utility.JwtTokenProvider;
@@ -14,7 +15,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-
 public class AuthServiceImpl  implements AuthService {
     private AuthenticationManager authenticationManager;
     private UsersRepo userRepository;
@@ -33,16 +33,23 @@ public class AuthServiceImpl  implements AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @Override
-    public String login(LoginDto loginDto) {
+
+    public JWTAuthResponse login(LoginDto loginDto) {
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.getUsernameOrEmail(), loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = jwtTokenProvider.generateToken(authentication);
 
-        return token;
+
+        return jwtTokenProvider.generateToken(authentication);
+    }
+
+    @Override
+    public void authenticate(String username, String password) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
+
+
     }
 }

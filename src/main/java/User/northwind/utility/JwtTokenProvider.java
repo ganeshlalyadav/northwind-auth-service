@@ -1,4 +1,5 @@
 package User.northwind.utility;
+import User.northwind.dao.JWTAuthResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -23,8 +24,9 @@ public class JwtTokenProvider {
     private long jwtExpirationDate;
 
     // generate JWT token
-    public String generateToken(Authentication authentication){
+    public JWTAuthResponse generateToken(Authentication authentication){
         String username = authentication.getName();
+        JWTAuthResponse jwtAuthResponse = new JWTAuthResponse();
 
         Date currentDate = new Date();
 
@@ -36,7 +38,10 @@ public class JwtTokenProvider {
                 .setExpiration(expireDate)
                 .signWith(key())
                 .compact();
-        return token;
+        jwtAuthResponse.setAccessToken(token);
+        jwtAuthResponse.setTokenExpireAt(expireDate);
+        jwtAuthResponse.setUserName(username);
+        return jwtAuthResponse;
     }
 
 

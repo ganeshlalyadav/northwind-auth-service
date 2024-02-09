@@ -1,8 +1,11 @@
 package User.northwind.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Set;
 
@@ -10,6 +13,8 @@ import java.util.Set;
 @Table(name = "user_table")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 
 public class User {
     @Id
@@ -52,6 +57,7 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String password;
+    private Integer attempts=0;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles",
@@ -59,6 +65,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private Set<Role> roles;
+
+
+   /* public User(String email, String password, Set<GrantedAuthority> authorities) {
+    }*/
 
 
 }
